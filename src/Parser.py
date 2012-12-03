@@ -22,14 +22,14 @@ class Parser(object):
         Constructor
         '''
         self.file = file
-        lex = LexicalAnalyzer(file)
-        self.parse(self, lex)
+        self.lex = LexicalAnalyzer(file)
+        self.parse(self.lex)
         
     def parse(self, lex):
         lex = self.lex
-        Parser.match("main")
-        Parser.match("(")
-        Parser.match(")")
+        Parser.match(self, "main")
+        Parser.match(self, "(")
+        Parser.match(self, ")")
         l = self.getStatementList()
         s = lex.LexicalAnalyzer.getToken()
         if s == "$":
@@ -174,14 +174,18 @@ class Parser(object):
             return False
     
     def match(self, expected):
-        expected = self.expected
-        tok = self.lex.LexicalAnalyzer.getToken()
-        if expected != tok:
+        self.expected = expected
+        self.tok = self.lex.getToken()
+        if expected != self.tok:
             raise ParserException("token equals " + self.tok + " and " +self.expected + " expected")
             
 class ParserException(Exception):
+    
     def __init__(self, message):
         self.message = message
+        
+    def getMessage(self):
+        print(self.message)
     
 
 class Memory(object):

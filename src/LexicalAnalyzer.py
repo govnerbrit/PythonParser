@@ -13,10 +13,12 @@ class LexicalAnalyzer(object):
         '''
         Constructor
         '''
-        f = open(file)
-        lexemes = f.readline()
-        while lexemes:
-            lexemes += f.readline()
+        f = open(file, "r")
+        self.lexemes = ""
+        self.line = f.readline()
+        while self.line != "":
+            self.lexemes += self.line
+            self.line = f.readline()
         f.close()
         
     def getLookAheadToken(self):
@@ -28,11 +30,8 @@ class LexicalAnalyzer(object):
         return lexeme
     
     def getToken(self):
-        lexemes = self.lexemes
-        if not lexemes: 
-            lexeme = "$"
-        else: 
-            lexeme = lexemes.pop(0)
+        self.l = self.lexemes.split()
+        lexeme = self.l.pop()
         return lexeme
     
             
