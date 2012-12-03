@@ -20,6 +20,7 @@ class LexicalAnalyzer(object):
             self.lexemes += self.line
             self.line = f.readline()
         f.close()
+        self.l = self.lexemes.split()
         
     def getLookAheadToken(self):
         lexemes = self.lexemes
@@ -30,8 +31,7 @@ class LexicalAnalyzer(object):
         return lexeme
     
     def getToken(self):
-        self.l = self.lexemes.split()
-        lexeme = self.l.pop()
+        lexeme = self.l.pop(0)
         return lexeme
     
             

@@ -31,7 +31,7 @@ class Parser(object):
         Parser.match(self, "(")
         Parser.match(self, ")")
         l = self.getStatementList()
-        s = lex.LexicalAnalyzer.getToken()
+        s = lex.getToken()
         if s == "$":
             raise ParserException("Garbage at Main")
         return Program(l)
@@ -40,15 +40,15 @@ class Parser(object):
         l = list()
         s = self.getStatement()
         l.append(s)
-        tok = self.lex.LexicalAnalyzer.getToken()
+        tok = self.lex.getToken()
         while tok == "/n":
             tok = self.lex.getToken()
             s = self.getStatement()
             l.append(s)
-            tok = self.lex.LexicalAnalyzer.getToken()
+            tok = self.lex.getToken()
         return l
     def getStatement(self):
-        s = self.lex.LexicalAnalyzer.getToken()
+        s = self.lex.getToken()
         if s == "if":
             stmt = self.getIfStatement()
         elif s == "while":
@@ -56,16 +56,17 @@ class Parser(object):
         elif s == "display":
             stmt = self.getDisplayStatement()
         else:
-            stmt = self.getAssignmentStatement()
+            stmt = self.getAssignmentStatement(s)
         return stmt
-    def getAssignmentStatement(self):
-        var = self.getId()
+    
+    def getAssignmentStatement(self, var): 
+        self.var = var
         self.match("<-")
         expr = self.getArithmeticExpression()
         return AssignmentStatement(var, expr)
     
     def getArithmeticExpression(self):
-        s = self.lex.LexicalAnalyzer.getToken()
+        s = self.lex.getToken()
         if self.isValidArithmeticOp(s):
             op = self.lex.getToken()
             op1 = self.getOperand()
@@ -96,8 +97,8 @@ class Parser(object):
     
     def getId(self):
         s = self.lex.getToken()
-        if s.equal("") or len(s) != 1:
-            raise ParserException("id expected")
+        if s == "" or len(s) > 1:
+            raise ParserException("id expected, received " + s)
         return Id(s)
     
     def getWhileStatement(self):
@@ -109,7 +110,7 @@ class Parser(object):
         return WhileStatement(expr, l)
     
     def getBooleanExpression(self):
-        s = self.lex.LexicalAnalyzer.getToken()
+        s = self.lex.getToken()
         if self.isValidBooleanOperator(s):
             op = self.lex.getToken()
             op1 = self.getOperand()
@@ -134,7 +135,7 @@ class Parser(object):
             expr = BooleanExpression.LEExpression(op1, op2)
         return expr
     def getOperand(self):
-        s = self.lex.LexicalAnalyzer.getLookAheadToken()
+        s = self.lex.getLookAheadToken()
         if s == "":
             raise ParserException("Operand Expected")
         if s.isdigit():
@@ -144,7 +145,7 @@ class Parser(object):
         return op
     
     def getLiteralInteger(self):
-        s = self.lex.LexicalAnalyzer.getToken()
+        s = self.lex.getToken()
         try:
             return int(s)
         except ValueError:
@@ -183,8 +184,6 @@ class ParserException(Exception):
     
     def __init__(self, message):
         self.message = message
-        
-    def getMessage(self):
         print(self.message)
     
 
