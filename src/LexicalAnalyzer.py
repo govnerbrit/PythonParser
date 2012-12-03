@@ -16,7 +16,7 @@ class LexicalAnalyzer(object):
         f = open(file)
         lexemes = f.readline()
         while lexemes:
-            lexemes.add(f.readline())
+            lexemes += f.readline()
         f.close()
         
     def getLookAheadToken(self):

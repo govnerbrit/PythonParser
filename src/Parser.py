@@ -22,14 +22,16 @@ class Parser(object):
         Constructor
         '''
         self.file = file
-        self.lex = LexicalAnalyzer(file)
+        lex = LexicalAnalyzer(file)
+        self.parse(self, lex)
         
-    def parse(self):
+    def parse(self, lex):
+        lex = self.lex
         Parser.match("main")
         Parser.match("(")
         Parser.match(")")
         l = self.getStatementList()
-        s = self.lex.LexicalAnalyzer.getToken()
+        s = lex.LexicalAnalyzer.getToken()
         if s == "$":
             raise ParserException("Garbage at Main")
         return Program(l)

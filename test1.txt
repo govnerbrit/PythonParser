@@ -1,0 +1,7 @@
+main ( )
+	x <- 1 ;
+	display ( x ) ;
+	while < x 2 do
+		x <- + x 1
+	end ;
+	display ( x )
