@@ -13,6 +13,6 @@ class AssignmentStatement(object):
           
     def execute(self):
         assign = self.expr.getValue()
-        id = Id.getChar(self, self.var)
-        Parser.store(self.id, assign)
+        ch = self.var
+        Parser.store(ch, assign)
         
