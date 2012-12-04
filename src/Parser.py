@@ -53,7 +53,7 @@ class Parser(object):
         return l
     
     def getStatement(self):
-        s = self.lex.getToken()
+        s = self.lex.getLookAheadToken()
         if s == "if":
             stmt = self.getIfStatement()
         elif s == "while":
@@ -61,11 +61,11 @@ class Parser(object):
         elif s == "display":
             stmt = self.getDisplayStatement()
         else:
-            stmt = self.getAssignmentStatement(s)
+            stmt = self.getAssignmentStatement()
         return stmt
     
-    def getAssignmentStatement(self, var): 
-        self.var = var
+    def getAssignmentStatement(self): 
+        var = self.getId()
         self.match("<-")
         expr = self.getArithmeticExpression()
         return AssignmentStatement(var, expr)
