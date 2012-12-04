@@ -11,8 +11,8 @@ class AssignmentStatement(object):
         self.var = var
         self.expr = expr
           
-    def execute(self):
+    def execute(self, parser):
         assign = self.expr.getValue()
         ch = self.var
-        Parser.store(ch, assign)
+        parser.store(ch, assign)
         

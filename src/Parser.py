@@ -13,6 +13,7 @@ from IfStatement import *
 from UnaryExpression import UnaryExpression
 from Memory import Memory
 from Id import *
+import array
 
 class Parser(object):
     '''
@@ -26,7 +27,7 @@ class Parser(object):
         '''
         self.file = file
         self.lex = LexicalAnalyzer(file)
-        self.mem = Memory()
+        self.mem = array()
         self.parse(self.lex)
         
     def parse(self, lex):
@@ -192,7 +193,7 @@ class Parser(object):
         i = 0
         while statementList != "" :
             s = statementList.pop(i)
-            s.execute()
+            s.execute(self)
             
     def store(self, ch, value):
         self.mem.insert((ord(ch)-ord('a')), value)
