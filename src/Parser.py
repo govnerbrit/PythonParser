@@ -10,6 +10,7 @@ from DisplayStatement import *
 from WhileStatement import *
 from BooleanExpression import *
 from IfStatement import *
+from UnaryExpression import UnaryExpression
 
 class Parser(object):
     '''
@@ -47,6 +48,7 @@ class Parser(object):
             l.append(s)
             tok = self.lex.getToken()
         return l
+    
     def getStatement(self):
         s = self.lex.getToken()
         if s == "if":
@@ -74,7 +76,7 @@ class Parser(object):
             expr = self.createBinaryExpression(op, op1, op2)
         else: 
             op = self.getOperand()
-            expr = self.UnaryExpression(op)
+            expr = UnaryExpression(op)
         return expr
     
     def createBinaryExpression(self, op, op1, op2):
@@ -134,6 +136,7 @@ class Parser(object):
         else:
             expr = BooleanExpression.LEExpression(op1, op2)
         return expr
+    
     def getOperand(self):
         s = self.lex.getLookAheadToken()
         if s == "":
@@ -179,6 +182,7 @@ class Parser(object):
         self.tok = self.lex.getToken()
         if expected != self.tok:
             raise ParserException("token equals " + self.tok + " and " +self.expected + " expected")
+    
             
 class ParserException(Exception):
     
@@ -209,4 +213,8 @@ class Program(object):
     def __init__(self, l):
         self.l = l
     def execute(self):
-        self.l.execute()
+        i = 0
+        k = self.l.split()
+        while i < self.l.count():
+            j = self.l.pop(i)
+            j.execute()

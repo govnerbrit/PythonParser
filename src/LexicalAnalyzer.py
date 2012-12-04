@@ -23,11 +23,11 @@ class LexicalAnalyzer(object):
         self.l = self.lexemes.split()
         
     def getLookAheadToken(self):
-        lexemes = self.lexemes
-        if not lexemes:
+        if self.l == "":
             lexeme = "$"
         else:
-            lexeme = lexemes(0)
+            lexeme = self.l.pop(0)
+            self.l.insert(0, lexeme)
         return lexeme
     
     def getToken(self):

@@ -8,7 +8,8 @@ from Parser import *
 def main():
     try:
         prog = Parser("../test1.txt")
-        prog.execute()
+        progFinal = Program(prog)
+        progFinal.execute()      
     except IOError:
         print("File not Found")
     except ParserException: 
