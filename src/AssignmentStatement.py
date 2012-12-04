@@ -3,7 +3,8 @@ Created on Dec 2, 2012
 
 @author: Govener Brit
 '''
-
+from Parser import *
+from Id import *
 class AssignmentStatement(object):
       
     def __init__(self, var, expr):
@@ -11,4 +12,7 @@ class AssignmentStatement(object):
         self.expr = expr
           
     def execute(self):
-        self.Memory.store(self.var.getChar(), self.expr.getValue())
+        assign = self.expr.getValue()
+        self.id = Id.getChar(self, self.var)
+        Parser.store(self, self.id, assign)
+        

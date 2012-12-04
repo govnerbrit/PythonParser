@@ -11,6 +11,8 @@ from WhileStatement import *
 from BooleanExpression import *
 from IfStatement import *
 from UnaryExpression import UnaryExpression
+from Memory import Memory
+from Id import *
 
 class Parser(object):
     '''
@@ -24,6 +26,7 @@ class Parser(object):
         '''
         self.file = file
         self.lex = LexicalAnalyzer(file)
+        self.mem = Memory()
         self.parse(self.lex)
         
     def parse(self, lex):
@@ -35,10 +38,10 @@ class Parser(object):
         s = lex.getToken()
         if s == "$":
             raise ParserException("Garbage at Main")
-        return Program(l)
+        Parser.execute(self, l)
     
     def getStatementList(self):
-        l = list()
+        l = []
         s = self.getStatement()
         l.append(s)
         tok = self.lex.getToken()
@@ -153,6 +156,7 @@ class Parser(object):
             return int(s)
         except ValueError:
             raise ParserException("literal integer expected")
+        
     def getIfStatement(self):
         self.match("if")
         expr = self.getBooleanExpression()
@@ -183,38 +187,25 @@ class Parser(object):
         if expected != self.tok:
             raise ParserException("token equals " + self.tok + " and " +self.expected + " expected")
     
+    def execute(self, statementList):
+        self.statementList = statementList
+        i = 0
+        while statementList != "" :
+            s = statementList.pop(i)
+            s.execute()
+            
+    def store(self, ch, value):
+        self.mem.insert((ord(ch)-ord('a')), value)
+    
+    def fetch(self, ch):
+        return self.mem(ord(ch)-ord('a'))
             
 class ParserException(Exception):
     
     def __init__(self, message):
         self.message = message
         print(self.message)
-    
-
-class Memory(object):
-    
-    mem = []
-    
-    def store(self, ch, value):
-        self.mem[ch-'a'] = value
-        
-    def fetch(self, ch):
-        return self.mem[ch-'a']
-
-class Id(object):
-    def __init__(self, ch):
-        self.ch = ch
-    def getValue(self):
-        return Memory.fetch(self.ch)
-    def getChar(self):
-        return self.ch
 
 class Program(object):
     def __init__(self, l):
         self.l = l
-    def execute(self):
-        i = 0
-        k = self.l.split()
-        while i < self.l.count():
-            j = self.l.pop(i)
-            j.execute()
