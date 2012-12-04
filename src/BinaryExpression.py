@@ -1,7 +1,7 @@
 '''
-Created on Nov 25, 2012
-
-@author: Govener Brit
+CS3150
+PythonParser
+@author: Sabrina Cown
 '''
 class BinaryExpression(object):
     

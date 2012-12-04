@@ -1,10 +1,10 @@
 '''
-Created on Dec 3, 2012
-
-@author: Govener Brit
+CS3150
+PythonParser
+@author: Sabrina Cown
 '''
-from Memory import Memory
 from Parser import *
+
 class Id(object):
     def __init__(self, ch):
         self.ch = ch

@@ -1,7 +1,7 @@
 '''
-Created on Dec 1, 2012
-
-@author: Govener Brit
+CS3150
+PythonParser
+@author: Sabrina Cown
 '''
 
 class LexicalAnalyzer(object):
@@ -16,11 +16,11 @@ class LexicalAnalyzer(object):
         f = open(file, "r")
         self.lexemes = ""
         self.line = f.readline()
-        while self.line != "":
+        while self.line:
             self.lexemes += self.line
             self.line = f.readline()
-        f.close()
         self.l = self.lexemes.split()
+        f.close()
         
     def getLookAheadToken(self):
         if self.l == "":
@@ -31,7 +31,10 @@ class LexicalAnalyzer(object):
         return lexeme
     
     def getToken(self):
-        lexeme = self.l.pop(0)
+        if self.l == "":
+            lexeme = "$"
+        else:
+            lexeme = self.l.pop(0)
         return lexeme
     
             

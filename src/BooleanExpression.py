@@ -1,7 +1,7 @@
 '''
-Created on Dec 2, 2012
-
-@author: Govener Brit
+CS3150
+PythonParser
+@author: Sabrina Cown
 '''
 
 class BooleanExpression(object):
@@ -63,13 +63,20 @@ class LEExpression(BooleanExpression):
      
 class LTExpression(BooleanExpression):
     
-    def __init__(self, op1, op2):
-        self.op1 = op1
-        self.op2 = op2
+    def __init__(self, parser, op1, op2):
+        self.op1 = str(op1)
+        if self.op1.isdigit():
+            self.op1 = int(op1)
+        else:
+            parser.fetch(self.op1)
+        self.op2 = str(op2)
+        if self.op2.isalnum():
+            self.op2 = parser.fetch(self.op2)
+        else:
+            self.op2 = op2
         BooleanExpression(op1, op2)
     def getValue(self):
-        return self.get.Left() < self.getRight()       
-     
+        return self.op1 < self.op2
 class NEExpression(BooleanExpression):
     
     def __init__(self, op1, op2):

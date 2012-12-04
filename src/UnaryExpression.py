@@ -1,9 +1,8 @@
 '''
-Created on Dec 3, 2012
-
-@author: Govener Brit
+CS3150
+PythonParser
+@author: sabrina cown
 '''
-
 class UnaryExpression(object):
     '''
     classdocs

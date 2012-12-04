@@ -1,7 +1,7 @@
 '''
-Created on Dec 2, 2012
-
-@author: Govener Brit
+CS3150
+PythonParser
+@author: Sabrina cown
 '''
 from Parser import *
 from Id import *
@@ -12,7 +12,8 @@ class AssignmentStatement(object):
         self.expr = expr
           
     def execute(self, parser):
-        assign = self.expr.getValue()
+        assign = self.expr
         ch = self.var
+        print(self.expr)
         parser.store(ch, assign)
         

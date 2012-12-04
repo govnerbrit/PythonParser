@@ -1,7 +1,7 @@
 '''
-Created on Dec 1, 2012
-
-@author: Govener Brit
+CS3150
+PythonParser
+@author: Sabrina Cown
 '''
 from LexicalAnalyzer import *
 from BinaryExpression import *
@@ -11,9 +11,8 @@ from WhileStatement import *
 from BooleanExpression import *
 from IfStatement import *
 from UnaryExpression import UnaryExpression
-from Memory import Memory
 from Id import *
-import array
+from array import array
 
 class Parser(object):
     '''
@@ -26,8 +25,8 @@ class Parser(object):
         Constructor
         '''
         self.file = file
+        self.mem = list()
         self.lex = LexicalAnalyzer(file)
-        self.mem = array()
         self.parse(self.lex)
         
     def parse(self, lex):
@@ -37,20 +36,20 @@ class Parser(object):
         Parser.match(self, ")")
         l = self.getStatementList()
         s = lex.getToken()
-        if s == "$":
-            raise ParserException("Garbage at Main")
-        Parser.execute(self, l)
+        if s != "$":
+            raise ParserException("Garbage")
+        self.execute(l)
     
     def getStatementList(self):
         l = []
         s = self.getStatement()
         l.append(s)
-        tok = self.lex.getToken()
-        while tok == "/n":
+        tok = self.lex.getLookAheadToken()
+        while tok == ";":
             tok = self.lex.getToken()
             s = self.getStatement()
             l.append(s)
-            tok = self.lex.getToken()
+            tok = self.lex.getLookAheadToken()
         return l
     
     def getStatement(self):
@@ -66,32 +65,32 @@ class Parser(object):
         return stmt
     
     def getAssignmentStatement(self): 
-        var = self.getId()
+        var = self.lex.getToken()
         self.match("<-")
         expr = self.getArithmeticExpression()
         return AssignmentStatement(var, expr)
     
     def getArithmeticExpression(self):
-        s = self.lex.getToken()
+        s = self.lex.getLookAheadToken()
         if self.isValidArithmeticOp(s):
             op = self.lex.getToken()
             op1 = self.getOperand()
             op2 = self.getOperand()
             expr = self.createBinaryExpression(op, op1, op2)
         else: 
-            op = self.getOperand()
-            expr = UnaryExpression(op)
+            expr = self.getOperand()
+            
         return expr
     
     def createBinaryExpression(self, op, op1, op2):
         if op == "+":
-            expr = BinaryExpression.AddExpression(op1, op2)
+            expr = AddExpression(op1, op2)
         elif op == "-":
-            expr = BinaryExpression.SubExpression(op1, op2)
+            expr = SubExpression(op1, op2)
         elif op == "*":
-            expr = BinaryExpression.MulExpression(op1, op2)
+            expr = MulExpression(op1, op2)
         else:
-            expr = BinaryExpression.DivExpression(op1, op2)
+            expr = DivExpression(op1, op2)
         return expr
     
     def getDisplayStatement(self):
@@ -116,7 +115,7 @@ class Parser(object):
         return WhileStatement(expr, l)
     
     def getBooleanExpression(self):
-        s = self.lex.getToken()
+        s = self.lex.getLookAheadToken()
         if self.isValidBooleanOperator(s):
             op = self.lex.getToken()
             op1 = self.getOperand()
@@ -128,27 +127,27 @@ class Parser(object):
         self.op1 = op1
         self.op2 = op2
         if self.op == "=":
-            expr = BooleanExpression.EQExpression(op1, op2)
+            expr = EQExpression(op1, op2)
         elif op == "/=":
-            expr = BooleanExpression.NEExpression(op1, op2)
+            expr = NEExpression(op1, op2)
         elif op == ">":
-            expr = BooleanExpression.GTExpression(op1, op2)
+            expr = GTExpression(op1, op2)
         elif op == ">=":
-            expr = BooleanExpression.GEExpression(op1, op2)
+            expr = GEExpression(op1, op2)
         elif op == "<":
-            expr = BooleanExpression.LTExpression(op1, op2)
+            expr = LTExpression(self, op1, op2)
         else:
-            expr = BooleanExpression.LEExpression(op1, op2)
+            expr = LEExpression(op1, op2)
         return expr
     
     def getOperand(self):
         s = self.lex.getLookAheadToken()
         if s == "":
             raise ParserException("Operand Expected")
-        if s.isdigit():
+        elif s.isdigit():
             op = self.getLiteralInteger()
         else:
-            op = self.getId()
+            op = s
         return op
     
     def getLiteralInteger(self):
@@ -191,15 +190,23 @@ class Parser(object):
     def execute(self, statementList):
         self.statementList = statementList
         i = 0
-        while statementList != "" :
+        while statementList != () :
             s = statementList.pop(i)
+            i += 1
             s.execute(self)
             
     def store(self, ch, value):
-        self.mem.insert((ord(ch)-ord('a')), value)
+        ch1 = str(ch)
+        ch1.strip()
+        self.mem.insert((ord(ch1)-ord('a')), value)
     
     def fetch(self, ch):
-        return self.mem(ord(ch)-ord('a'))
+        ch1 = str(ch)
+        ch1.strip()
+        print(ch1)
+        value = self.mem.pop(ord(ch1)-ord('a'))
+        self.mem.insert(ord(ch1)-ord('a'))
+        return value
             
 class ParserException(Exception):
     

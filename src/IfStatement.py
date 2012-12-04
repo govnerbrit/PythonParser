@@ -1,7 +1,7 @@
 '''
-Created on Dec 2, 2012
-
-@author: Govener Brit
+CS3150
+PythonParser
+@author: SabrinaCown
 '''
 
 class IfStatement(object):
@@ -18,7 +18,7 @@ class IfStatement(object):
         self.l1 = l1
         self.l2 = l2
     
-    def execute(self):
+    def execute(self, parser):
         if self.expr.BooleanExpression.getValue():
             self.l1.execute()
         else:
